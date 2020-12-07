@@ -1,0 +1,128 @@
+ASSIGNMENT3;
+=======================================================
+1)create table Department with dept_id(integer),dept_name(varchar(50)).
+
+CREATE DATABASE ASSIGNMENT3;
+USE ASSINMENT3;
+
++++++DEPARTMENT TABLE+++++++++
+CREATE TABLE DEPARTMENT (DEPT_ID INT NOT NULL AUTO_INCREMENT,DEPT_NAME VARCHAR(50),PRIMARY KEY(DEPT_ID));
+
+mysql> DESC DEPARTMENT;
++-----------+-------------+------+-----+---------+----------------+
+| Field     | Type        | Null | Key | Default | Extra          |
++-----------+-------------+------+-----+---------+----------------+
+| DEPT_ID   | int(11)     | NO   | PRI | NULL    | auto_increment |
+| DEPT_NAME | varchar(50) | YES  |     | NULL    |                |
++-----------+-------------+------+-----+---------+----------------+
+2 rows in set (0.00 sec)
+
+
+
+mysql>INSERT INTO DEPARTMENT(DEPT_NAME)VALUES('TRAINING');
+
+
+
+mysql>INSERT INTO DEPARTMENT(DEPT_NAME)VALUES('MARKETING');
+
+
+mysql>SELECT*FROM DEPARTMENT;
++---------+-----------+
+| DEPT_ID | DEPT_NAME |
++---------+-----------+
+|       1 | FINANCE   |
+|       2 | TRAINING  |
+|       3 | MARKETING |
++---------+-----------+
+
+++++++++++EMPLOYEE+++++++++++++++++
+
+mysql> CREATE TABLE EMPLOYEE (EMP_ID INT(4),EMP_NAME VARCHAR(20),DEPT_ID INT,SAL
+ARY INT(10),MANAGER VARCHAR(20), FOREIGN KEY (DEPT_ID)REFERENCES DEPARTMENT(DEPT
+_ID));
+Query OK, 0 rows affected (0.31 sec)
+
+mysql> DESC EMPLOYEE;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| EMP_ID   | int(4)      | YES  |     | NULL    |       |
+| EMP_NAME | varchar(20) | YES  |     | NULL    |       |
+| DEPT_ID  | int(11)     | YES  | MUL | NULL    |       |
+| SALARY   | int(10)     | YES  |     | NULL    |       |
+| MANAGER  | varchar(20) | YES  |     | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+5 rows in set (0.06 sec)
+
+
+mysql> INSERT INTO EMPLOYEE VALUES(1,'ARUN',1,8000,4),(2,'KIRAN',1,7000,1),(3,'S
+COTT',1,3000,1),(3,'MAX',2,9000,NULL),(5,'JACK',2,8000,4),(6,'KING',NULL,6000,1)
+;
+Query OK, 6 rows affected (0.09 sec)
+Records: 6  Duplicates: 0  Warnings: 0
+
+mysql> SELECT*FROM EMPLOYEE;
++--------+----------+---------+--------+---------+
+| EMP_ID | EMP_NAME | DEPT_ID | SALARY | MANAGER |
++--------+----------+---------+--------+---------+
+|      1 | ARUN     |       1 |   8000 | 4       |
+|      2 | KIRAN    |       1 |   7000 | 1       |
+|      3 | SCOTT    |       1 |   3000 | 1       |
+|      3 | MAX      |       2 |   9000 | NULL    |
+|      5 | JACK     |       2 |   8000 | 4       |
+|      6 | KING     |    NULL |   6000 | 1       |
++--------+----------+---------+--------+---------+
+6 rows in set (0.00 sec)
+====================================================================
+1) select all data and sum of salary from employee and group according to deptid.
+
+mysql> SELECT *,SUM(SALARY) FROM EMPLOYEE GROUP BY DEPT_ID;
++--------+----------+---------+--------+---------+-------------+
+| EMP_ID | EMP_NAME | DEPT_ID | SALARY | MANAGER | SUM(SALARY) |
++--------+----------+---------+--------+---------+-------------+
+|      6 | KING     |    NULL |   6000 | 1       |        6000 |
+|      1 | ARUN     |       1 |   8000 | 4       |       18000 |
+|      3 | MAX      |       2 |   9000 | NULL    |       17000 |
++--------+----------+---------+--------+---------+-------------+
+3 rows in set (0.00 sec)
+
+================================================================================
+2. select deptid and sum of salary where salary is greater than 17000 and group by deptid.
+
+mysql> SELECT DEPT_ID,SUM(SALARY)FROM EMPLOYEE GROUP BY DEPT_ID HAVING SUM(SALAR
+Y) >17000;
++---------+-------------+
+| DEPT_ID | SUM(SALARY) |
++---------+-------------+
+|       1 |       18000 |
++---------+-------------+
+1 row in set (0.00 sec)
+=======================================================================
+1. select deptid and sum of salary where sum of salary is greater than 18000 and grup by deptid.  
+
+mysql> SELECT DEPT_ID,SUM(SALARY)FROM EMPLOYEE GROUP BY DEPT_ID HAVING SUM(SALAR
+Y) >18000;
+Empty set (0.00 sec)
+======================================================================
+2. select deptid and sum of salary where sum of salary is less than 20000 and grup by deptid.
+
+
+mysql> SELECT DEPT_ID,SUM(SALARY)FROM EMPLOYEE GROUP BY DEPT_ID HAVING SUM(SALAR
+Y) <20000;
++---------+-------------+
+| DEPT_ID | SUM(SALARY) |
++---------+-------------+
+|    NULL |        6000 |
+|       1 |       18000 |
+|       2 |       17000 |
++---------+-------------+
+3 rows in set (0.00 sec)
+
+
+
+
+
+
+
+
+
