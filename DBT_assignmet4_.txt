@@ -1,0 +1,179 @@
+assignment 4
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
+
+=========================join===============================
+1. select dept_name and emp_name where dept_id is same.
+
+mysql> select department.dept_name,employee.emp_name from department,employee wh
+ere department.dept_id=employee.dept_id;
++-----------+----------+
+| dept_name | emp_name |
++-----------+----------+
+| FINANCE   | ARUN     |
+| FINANCE   | KIRAN    |
+| FINANCE   | SCOTT    |
+| TRAINING  | MAX      |
+| TRAINING  | JACK     |
++-----------+----------+
+5 rows in set (0.07 sec)
+
+
+
+2. select all from both tables where dept_id is same.
+
+mysql> select * from department,employee where department.dept_id=employee.dept_
+id;
++---------+-----------+--------+----------+---------+--------+---------+
+| DEPT_ID | DEPT_NAME | EMP_ID | EMP_NAME | DEPT_ID | SALARY | MANAGER |
++---------+-----------+--------+----------+---------+--------+---------+
+|       1 | FINANCE   |      1 | ARUN     |       1 |   8000 | 4       |
+|       1 | FINANCE   |      2 | KIRAN    |       1 |   7000 | 1       |
+|       1 | FINANCE   |      3 | SCOTT    |       1 |   3000 | 1       |
+|       2 | TRAINING  |      3 | MAX      |       2 |   9000 | NULL    |
+|       2 | TRAINING  |      5 | JACK     |       2 |   8000 | 4       |
++---------+-----------+--------+----------+---------+--------+---------+
+5 rows in set (0.00 sec)
+
+
+3. select dept_id and sum of salary group it by dept_id.
+
+mysql> select department.dept_id, sum(employee.salary) from department, employee
+ where department.dept_id=employee.dept_id group by department.dept_id,employee.
+dept_id;
++---------+----------------------+
+| dept_id | sum(employee.salary) |
++---------+----------------------+
+|       1 |                18000 |
+|       2 |                17000 |
++---------+----------------------+
+2 rows in set (0.05 sec)
+
+4. select dept_name and emp_name apply right outer join and left outer join.
+
+mysql> select employee.emp_name,department.dept_name from employee, department w
+here employee.emp_id= department.dept_id;
++----------+-----------+
+| emp_name | dept_name |
++----------+-----------+
+| ARUN     | FINANCE   |
+| KIRAN    | TRAINING  |
+| SCOTT    | MARKETING |
+| MAX      | MARKETING |
++----------+-----------+
+4 rows in set (0.07 sec)
+
+
+mysql> select dept_name, emp_name from employee right outer join department on e
+mployee.dept_id=department.dept_id;
++-----------+----------+
+| dept_name | emp_name |
++-----------+----------+
+| FINANCE   | ARUN     |
+| FINANCE   | KIRAN    |
+| FINANCE   | SCOTT    |
+| TRAINING  | MAX      |
+| TRAINING  | JACK     |
+| MARKETING | NULL     |
++-----------+----------+
+6 rows in set (0.00 sec)
+
+
+5. select emp_name with their respective manager names.
+mysql> select emp_name,manager from employee;
++----------+---------+
+| emp_name | manager |
++----------+---------+
+| ARUN     | 4       |
+| KIRAN    | 1       |
+| SCOTT    | 1       |
+| MAX      | NULL    |
+| JACK     | 4       |
+| KING     | 1       |
++----------+---------+
+6 rows in set (0.00 sec)
+
+6. select epm_name with their respective department names.
+mysql> select emp_name, dept_name from employee ,department where employee.dept_
+id=department.dept_id;
++----------+-----------+
+| emp_name | dept_name |
++----------+-----------+
+| ARUN     | FINANCE   |
+| KIRAN    | FINANCE   |
+| SCOTT    | FINANCE   |
+| MAX      | TRAINING  |
+| JACK     | TRAINING  |
++----------+-----------+
+5 rows in set (0.00 sec)
+
+===================================================UNION=========================================================
+
+mysql> select *from emp1
+    -> union all
+    -> select *from emp2;
++--------+----------+
+| emp_no | emp_name |
++--------+----------+
+|      1 | A        |
+|      2 | B        |
+|      3 | c        |
+|      1 | A        |
+|      2 | B        |
+|      4 | D        |
+|      5 | E        |
++--------+----------+
+7 rows in set (0.00 sec)
+========================================SUBQUERIES=================================================================
+1. select employee having  same salary as 'Arun'.
+
+mysql> SELECT EMP_NAME FROM EMPLOYEE WHERE SALARY =(SELECT SALARY FROM EMPLOYEE
+WHERE EMP_NAME='ARUN');
++----------+
+| EMP_NAME |
++----------+
+| ARUN     |
+| JACK     |
++----------+
+2 rows in set (0.06 sec)
+
+
+2. select employee belonging to same dept as 'jack'.
+
+mysql> SELECT EMP_NAME FROM EMPLOYEE WHERE DEPT_ID=(SELECT DEPT_ID FROM EMPLOYEE
+ WHERE EMP_NAME='JACK');
++----------+
+| EMP_NAME |
++----------+
+| MAX      |
+| JACK     |
++----------+
+2 rows in set (0.00 sec)
+
+
+3. select name of employee havin lowest salary.
+
+mysql> SELECT EMP_NAME FROM EMPLOYEE WHERE SALARY =(SELECT MIN(SALARY) FROM EMPL
+OYEE);
++----------+
+| EMP_NAME |
++----------+
+| SCOTT    |
++----------+
+1 row in set (0.00 sec)
+
+4. update salary =15000 of employees belonging to same dept as 'Max'.
+
+mysql> UPDATE EMPLOYEE SET SALARY=15000 WHERE DEPT_ID=(SELECT DEPT_ID FROM(SELEC
+T DEPT_ID FROM EMPLOYEE WHERE EMP_NAME='MAX')A) AND EMP_NAME !='MAX';
+
++--------+----------+---------+--------+---------+
+| EMP_ID | EMP_NAME | DEPT_ID | SALARY | MANAGER |
++--------+----------+---------+--------+---------+
+|      1 | ARUN     |       1 |   8000 | 4       |
+|      2 | KIRAN    |       1 |   7000 | 1       |
+|      3 | SCOTT    |       1 |   3000 | 1       |
+|      3 | MAX      |       2 |   9000 | NULL    |
+|      5 | JACK     |       2 |  15000 | 4       |
+|      6 | KING     |    NULL |   6000 | 1       |
++--------+----------+---------+--------+---------+
+6 rows in set (0.00 sec)
