@@ -1,0 +1,98 @@
+create database assignment5;
+use assignment5;
+SHOW TABLES;
+DESC EMP_TEST;
+Create table EMP ( EMPNO numeric(4) not null, ENAME varchar(30) not null, JOB varchar(10), MGR numeric(4), HIREDATE date, SAL numeric(7,2), DEPTNO numeric(2) ); 
+Insert into EMP (EMPNO ,ENAME, JOB, MGR, HIREDATE, SAL, DEPTNO ) values(1000,  'Manish' , 'SALESMAN', 1003,  '2020-02-18', 600,  30) ;
+Insert into EMP (EMPNO ,ENAME, JOB, MGR, HIREDATE, SAL, DEPTNO ) values(1001,  'Manoj' , 'SALESMAN', 1003,  '2018-02-18', 600,  30) ;
+Insert into EMP (EMPNO ,ENAME, JOB, MGR, HIREDATE, SAL, DEPTNO ) values(1002 , 'Ashish', 'SALESMAN',1003 , '2013-02-18',  750,  30 );
+Insert into EMP (EMPNO ,ENAME, JOB, MGR, HIREDATE, SAL, DEPTNO ) values(1004,  'Rekha', 'ANALYST', 1006 , '2001-02-18', 3000,  10);
+Insert into EMP (EMPNO ,ENAME, JOB, MGR, HIREDATE, SAL, DEPTNO ) values(1005 , 'Sachin', 'ANALYST', 1006 ,  '2019-02-18', 3000, 10 );
+Insert into EMP (EMPNO ,ENAME, JOB, MGR, HIREDATE, SAL, DEPTNO ) values(1006,  'Pooja',  'MANAGER'  , null, '2000-02-18' ,6000, 10 );
+
+SELECT *FROM EMP;
+
+
+Create table dept (dno numeric(4) not null, dname varchar(10) not null,area varchar(30));
+Insert into dept(dno,dname,area) values(10,'Store','Mumbai');
+Insert into dept(dno,dname,area) values(20,'Purchase','Mumbai');
+Insert into dept(dno,dname,area) values(30,'Store', 'Delhi');
+Insert into dept(dno,dname,area) values(40,'Marketing','Pune');
+Insert into dept(dno,dname,area) values(50,'Finance','Delhi');
+Insert into dept(dno,dname,area) values(60,'Accounts','Mumbai');
+SELECT *FROM DEPT;
+
+DELIMITER &&
+CREATE PROCEDURE PROC_CAL(X INT,Y INT)
+BEGIN
+DECLARE A,B,C,D INT DEFAULT 0;
+SET A=X+Y ;
+SET B=X-Y;
+SET C=X*Y;
+SET D=X/Y;
+SELECT A,B,C,D;
+END &&
+
+CALL PROC_CAL(2,3)
+DELIMITER $$
+CREATE PROCEDURE PROC_REV(VAR VARCHAR(10))
+BEGIN
+SELECT REVERSE(VAR);
+END$$
+CALL PROC_REV('DATABASE')
+
+DELIMITER $$
+CREATE PROCEDURE DIS_DETAIL()
+BEGIN
+SELECT EMPNO,ENAME,SAL FROM EMP GROUP BY SAL HAVING MAX(SAL) LIMIT 5;
+END$$
+
+CALL DIS_DETAIL()
+
+DELIMITER %%
+CREATE PROCEDURE PROC_CREATE()
+BEGIN
+CREATE TABLE EMP_TEST (E_ID INTEGER,E_NAME VARCHAR(10),E_JOINING_DATE DATE);
+END %%
+
+CALL PROC_CREATE()
+
+DELIMITER ##
+CREATE PROCEDURE ADD_ROW()
+BEGIN
+INSERT INTO DEPT (DNO, DNAME,AREA) VALUES(60,'EDUCATION','PUNE');
+END##
+CALL ADD_ROW()
+
+DELIMITER $$
+CREATE PROCEDURE PROC1()
+BEGIN 
+DECLARE NUM INTEGER DEFAULT 10;
+SELECT NUM;
+SELECT SQRT(NUM);
+-- SELECT CUBE(NUM);
+END $$
+
+CALL PROC1;
+
+DELIMTER $$
+CREATE PROCEDURE PROC6(INOUT NUM INT,OUT SQR INT,OUT CUBE1 INT)
+BEGIN
+DECLARE NUM1 INT;
+SET NUM1=NUM;
+SELECT NUM,POWER(NUM,2) AS SQUARE,POWER(NUM,3) AS CUBE1 INTO NUM,SQR,CUBE1;
+END$$
+
+SET @NUM=2;
+CALL PROC6(@NUM,@SQR,@CUBE1);
+
+
+DELIMITER $$
+CREATE PROCEDURE PROC7(OUT VAR INTEGER)
+BEGIN 
+DECLARE NUM INT;
+SET NUM=10;
+SELECT NUM INTO VAR;
+END$$
+CALL PROC7(@VAR);
+SELECT @ VAR;
